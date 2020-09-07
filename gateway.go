@@ -1,5 +1,19 @@
 package deconz
 
+import "context"
+
+// GetGateway collects the current state from the gateway and returns it
+func (c *Client) GetGateway(ctx context.Context) (*GatewayState, error) {
+	gwState := &GatewayState{}
+
+	err := c.get(ctx, "config", gwState)
+	if err != nil {
+		return nil, err
+	}
+
+	return gwState, nil
+}
+
 // GatewayState contains the current state of the gateway
 type GatewayState struct {
 	APIVersion          string              `json:"apiversion"`

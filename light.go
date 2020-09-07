@@ -1,5 +1,59 @@
 package deconz
 
+import (
+	"context"
+	"strconv"
+)
+
+// GetLights retrieves all the lights available on the gatway
+func (c *Client) GetLights(ctx context.Context) (*GetLightsResponse, error) {
+	lightsResp := &GetLightsResponse{}
+
+	err := c.get(ctx, "lights", lightsResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return lightsResp, nil
+}
+
+// GetLight retrieves the specified light
+func (c *Client) GetLight(ctx context.Context, id int) (*Light, error) {
+	light := &Light{}
+
+	err := c.get(ctx, "lights/"+strconv.Itoa(id), light)
+	if err != nil {
+		return nil, err
+	}
+
+	return light, nil
+}
+
+// SetLightState specifies the new state of a light
+func (c *Client) SetLightState(ctx context.Context, id int, newState *SetLightStateRequest) error {
+	return c.put(ctx, "lights/"+strconv.Itoa(id)+"/state", newState)
+}
+
+// SetLightConfig specifies the new config of a light
+func (c *Client) SetLightConfig(ctx context.Context, id int, newConfig *SetLightConfigRequest) error {
+	return c.put(ctx, "lights/"+strconv.Itoa(id), newConfig)
+}
+
+// DeleteLight removes the specified light from the gateway
+func (c *Client) DeleteLight(ctx context.Context, id int) error {
+	return c.delete(ctx, "lights/"+strconv.Itoa(id))
+}
+
+// DeleteLightGroups removes the light from all its groups
+func (c *Client) DeleteLightGroups(ctx context.Context, id int) error {
+	return c.delete(ctx, "lights/"+strconv.Itoa(id)+"/groups")
+}
+
+// DeleteLightScenes removes the light from all its scenes
+func (c *Client) DeleteLightScenes(ctx context.Context, id int) error {
+	return c.delete(ctx, "lights/"+strconv.Itoa(id)+"/scenes")
+}
+
 // Light contains the fields of a light.
 type Light struct {
 	// ID contains the gateway-specified ID; could change.
