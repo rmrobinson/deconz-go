@@ -24,7 +24,7 @@ func main() {
 
 	c := deconz.NewClient(&http.Client{}, *host, *port, *apiKey)
 
-	gw, err := c.GetGateway(context.Background())
+	gw, err := c.GetGatewayState(context.Background())
 	if err != nil {
 		fmt.Printf("err getting gateway\n")
 		return

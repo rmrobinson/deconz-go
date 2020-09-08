@@ -1,9 +1,61 @@
 package deconz
 
-import "context"
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"strconv"
+)
 
-// GetGateway collects the current state from the gateway and returns it
-func (c *Client) GetGateway(ctx context.Context) (*GatewayState, error) {
+// CreateAPIKey attempts to generate an API key to use for subequent operations.
+// The username is optional - if not specified a random string will be generated.
+func (c *Client) CreateAPIKey(ctx context.Context, reqType *CreateAPIKeyRequest) (string, error) {
+	req, err := json.Marshal(reqType)
+	if err != nil {
+		return "", err
+	}
+
+	r, err := http.NewRequest(http.MethodPost, "http://"+c.hostname+":"+strconv.Itoa(c.port)+"/api", bytes.NewBuffer(req))
+	if err != nil {
+		return "", err
+	}
+
+	r = r.WithContext(ctx)
+
+	resp, err := c.httpClient.Do(r)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	deconzResp := &Response{}
+	err = json.NewDecoder(resp.Body).Decode(deconzResp)
+	if err != nil {
+		return "", err
+	}
+
+	if len(*deconzResp) < 1 {
+		return "", ErrMalformedResponse
+	}
+	if id, ok := (*deconzResp)[0].Success["username"]; ok {
+		if strID, ok := id.(string); ok {
+			return strID, nil
+		}
+		return "", errors.New("new user id not string")
+	}
+
+	return "", (*deconzResp)[0].Error
+}
+
+// DeleteAPIKey is used to delete the specified API key.
+func (c *Client) DeleteAPIKey(ctx context.Context, keyToDelete string) error {
+	return c.delete(ctx, "config/whitelist/"+keyToDelete)
+}
+
+// GetGatewayState collects the current state from the gateway and returns it
+func (c *Client) GetGatewayState(ctx context.Context) (*GatewayState, error) {
 	gwState := &GatewayState{}
 
 	err := c.get(ctx, "config", gwState)
@@ -57,6 +109,12 @@ type GetGatewayResponse struct {
 	// Rules map[string]Rule `json:"rules"`
 	// Schedules map[string]Schedule `json:"schedules"`
 	Sensors map[int]Sensor `json:"sensors"`
+}
+
+// CreateAPIKeyRequest contains the fields which will be used to request an API key.
+type CreateAPIKeyRequest struct {
+	ApplicationName string `json:"devicetype"`
+	Username        string `json:"username,omitempty"`
 }
 
 // SetConfigRequest contains the set of possible gateway configuration parameters.
