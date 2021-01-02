@@ -3,7 +3,6 @@ package deconz
 import (
 	"context"
 	"encoding/json"
-	"strconv"
 )
 
 // GetSensors retrieves all the sensors available on the gatway
@@ -19,10 +18,10 @@ func (c *Client) GetSensors(ctx context.Context) (*GetSensorsResponse, error) {
 }
 
 // GetSensor retrieves the specified sensor
-func (c *Client) GetSensor(ctx context.Context, id int) (*Sensor, error) {
+func (c *Client) GetSensor(ctx context.Context, id string) (*Sensor, error) {
 	sensor := &Sensor{}
 
-	err := c.get(ctx, "sensors/"+strconv.Itoa(id), sensor)
+	err := c.get(ctx, "sensors/"+id, sensor)
 	if err != nil {
 		return nil, err
 	}
@@ -31,23 +30,23 @@ func (c *Client) GetSensor(ctx context.Context, id int) (*Sensor, error) {
 }
 
 // SetSensorState specifies the new state of a sensor
-func (c *Client) SetSensorState(ctx context.Context, id int, newState *SetSensorStateRequest) error {
-	return c.put(ctx, "sensors/"+strconv.Itoa(id)+"/state", newState)
+func (c *Client) SetSensorState(ctx context.Context, id string, newState *SetSensorStateRequest) error {
+	return c.put(ctx, "sensors/"+id+"/state", newState)
 }
 
 // SetSensor specifies the new options for a sensor
-func (c *Client) SetSensor(ctx context.Context, id int, newConfig *SetSensorRequest) error {
-	return c.put(ctx, "sensors/"+strconv.Itoa(id), newConfig)
+func (c *Client) SetSensor(ctx context.Context, id string, newConfig *SetSensorRequest) error {
+	return c.put(ctx, "sensors/"+id, newConfig)
 }
 
 // SetSensorConfig specifies the new config of a sensor
-func (c *Client) SetSensorConfig(ctx context.Context, id int, newConfig *SetSensorConfigRequest) error {
-	return c.put(ctx, "sensors/"+strconv.Itoa(id)+"/config", newConfig)
+func (c *Client) SetSensorConfig(ctx context.Context, id string, newConfig *SetSensorConfigRequest) error {
+	return c.put(ctx, "sensors/"+id+"/config", newConfig)
 }
 
 // DeleteSensor removes the specified sensor from the gateway
-func (c *Client) DeleteSensor(ctx context.Context, id int) error {
-	return c.delete(ctx, "sensors/"+strconv.Itoa(id))
+func (c *Client) DeleteSensor(ctx context.Context, id string) error {
+	return c.delete(ctx, "sensors/"+id)
 }
 
 // Sensor represents a generic sensor in a Zigbee network

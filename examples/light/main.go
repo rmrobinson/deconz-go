@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/rmrobinson/deconz-go"
@@ -52,7 +53,7 @@ func main() {
 			req.Saturation = *sat
 		}
 
-		err := c.SetLightState(context.Background(), *resourceID, req)
+		err := c.SetLightState(context.Background(), strconv.Itoa(*resourceID), req)
 		if err != nil {
 			fmt.Printf("error setting light %d: %s\n", *resourceID, err.Error())
 			return
@@ -64,7 +65,7 @@ func main() {
 			Name: *name,
 		}
 
-		err := c.SetLightConfig(context.Background(), *resourceID, req)
+		err := c.SetLightConfig(context.Background(), strconv.Itoa(*resourceID), req)
 		if err != nil {
 			fmt.Printf("error setting light %d config: %s\n", *resourceID, err.Error())
 			return

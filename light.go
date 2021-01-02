@@ -30,28 +30,28 @@ func (c *Client) GetLight(ctx context.Context, id int) (*Light, error) {
 }
 
 // SetLightState specifies the new state of a light
-func (c *Client) SetLightState(ctx context.Context, id int, newState *SetLightStateRequest) error {
-	return c.put(ctx, "lights/"+strconv.Itoa(id)+"/state", newState)
+func (c *Client) SetLightState(ctx context.Context, id string, newState *SetLightStateRequest) error {
+	return c.put(ctx, "lights/"+id+"/state", newState)
 }
 
 // SetLightConfig specifies the new config of a light
-func (c *Client) SetLightConfig(ctx context.Context, id int, newConfig *SetLightConfigRequest) error {
-	return c.put(ctx, "lights/"+strconv.Itoa(id), newConfig)
+func (c *Client) SetLightConfig(ctx context.Context, id string, newConfig *SetLightConfigRequest) error {
+	return c.put(ctx, "lights/"+id, newConfig)
 }
 
 // DeleteLight removes the specified light from the gateway
-func (c *Client) DeleteLight(ctx context.Context, id int) error {
-	return c.delete(ctx, "lights/"+strconv.Itoa(id))
+func (c *Client) DeleteLight(ctx context.Context, id string) error {
+	return c.delete(ctx, "lights/"+id)
 }
 
 // DeleteLightGroups removes the light from all its groups
-func (c *Client) DeleteLightGroups(ctx context.Context, id int) error {
-	return c.delete(ctx, "lights/"+strconv.Itoa(id)+"/groups")
+func (c *Client) DeleteLightGroups(ctx context.Context, id string) error {
+	return c.delete(ctx, "lights/"+id+"/groups")
 }
 
 // DeleteLightScenes removes the light from all its scenes
-func (c *Client) DeleteLightScenes(ctx context.Context, id int) error {
-	return c.delete(ctx, "lights/"+strconv.Itoa(id)+"/scenes")
+func (c *Client) DeleteLightScenes(ctx context.Context, id string) error {
+	return c.delete(ctx, "lights/"+id+"/scenes")
 }
 
 // Light contains the fields of a light.
