@@ -6,10 +6,10 @@ import (
 )
 
 // GetSensors retrieves all the sensors available on the gatway
-func (c *Client) GetSensors(ctx context.Context) (*GetSensorsResponse, error) {
-	sensorsResp := &GetSensorsResponse{}
+func (c *Client) GetSensors(ctx context.Context) (GetSensorsResponse, error) {
+	sensorsResp := GetSensorsResponse{}
 
-	err := c.get(ctx, "sensors", sensorsResp)
+	err := c.get(ctx, "sensors", &sensorsResp)
 	if err != nil {
 		return nil, err
 	}

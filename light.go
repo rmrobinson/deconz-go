@@ -6,10 +6,10 @@ import (
 )
 
 // GetLights retrieves all the lights available on the gatway
-func (c *Client) GetLights(ctx context.Context) (*GetLightsResponse, error) {
-	lightsResp := &GetLightsResponse{}
+func (c *Client) GetLights(ctx context.Context) (GetLightsResponse, error) {
+	lightsResp := GetLightsResponse{}
 
-	err := c.get(ctx, "lights", lightsResp)
+	err := c.get(ctx, "lights", &lightsResp)
 	if err != nil {
 		return nil, err
 	}
