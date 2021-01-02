@@ -73,7 +73,7 @@ func main() {
 		fmt.Printf("set complete\n")
 	}
 
-	resp, err := c.GetLight(context.Background(), *resourceID)
+	resp, err := c.GetLight(context.Background(), strconv.Itoa(*resourceID))
 	if err != nil {
 		fmt.Printf("error getting light %d: %s\n", *resourceID, err.Error())
 		return

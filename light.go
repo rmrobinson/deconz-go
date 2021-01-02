@@ -2,7 +2,6 @@ package deconz
 
 import (
 	"context"
-	"strconv"
 )
 
 // GetLights retrieves all the lights available on the gatway
@@ -18,10 +17,10 @@ func (c *Client) GetLights(ctx context.Context) (GetLightsResponse, error) {
 }
 
 // GetLight retrieves the specified light
-func (c *Client) GetLight(ctx context.Context, id int) (*Light, error) {
+func (c *Client) GetLight(ctx context.Context, id string) (*Light, error) {
 	light := &Light{}
 
-	err := c.get(ctx, "lights/"+strconv.Itoa(id), light)
+	err := c.get(ctx, "lights/"+id, light)
 	if err != nil {
 		return nil, err
 	}
