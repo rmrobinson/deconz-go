@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/rmrobinson/deconz-go"
@@ -33,7 +34,7 @@ func main() {
 		return
 	}
 
-	resp, err := c.GetSensor(context.Background(), *resourceID)
+	resp, err := c.GetSensor(context.Background(), strconv.Itoa(*resourceID))
 	if err != nil {
 		fmt.Printf("error getting sensor %d: %s\n", *resourceID, err.Error())
 		return
